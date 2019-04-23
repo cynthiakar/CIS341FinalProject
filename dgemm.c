@@ -59,7 +59,8 @@ void do_block(int n, int si, int sj, int sk, double *a, double *b, double *c)
         for (j = sj; j < sj + BLOCK_SIZE; j++)
         {
             double cij = c[i * n + j];
-            for (k = sk; k < sk + BLOCK_SIZE; k++) cij += a[i * n + k] * b[k * n + j];
+            for (k = sk; k < sk + BLOCK_SIZE; k++) 
+                cij += a[i * n + k] * b[k * n + j];
             c[i * n + j] = cij;
         }
 }
@@ -93,6 +94,34 @@ void dgemm_intrin(int n)
             _mm256_store_pd(&c[i * n + j], c4);
         }
     }
+}
+
+/*********** Cache Blocking and SIMD Mechanism ***********/
+#define BLOCK_SIZE 4
+void do_block_SIMD(int n, int si, int sj, int sk, double *a, double *b, double *c)
+{
+    int i, j, k;
+    for (i = si; i < si + BLOCK_SIZE; i++)     
+        for (j = sj; j < sj + BLOCK_SIZE; j++) {
+            __m256d c4  = _mm256_load_pd(&c[i * n + j]);
+            for (k = sk; k < sk + BLOCK_SIZE; k++) {
+                __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
+                __m256d b4 = _mm256_load_pd(&b[k * n + j]);
+                c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+            }
+            _mm256_store_pd(&c[i * n + j], c4);
+        }
+}
+void dgemm_blocking(int n)
+{
+    int i, j, k;
+    for(i = 0; i < n; i += BLOCK_SIZE)     
+        for(j = 0; j < n; j += BLOCK_SIZE)
+        {
+            c[i * n + j] = 0;
+            for(k = 0; k < n; k += BLOCK_SIZE)           
+                do_block_SIMD(n, i, j, k, a, b, c);
+        }
 }
 
 /* Implement this function with multiple optimization techniques. */
