@@ -126,23 +126,21 @@ void dgemm_blocking_SIMD(int n)
         }
 }
 /*********** Loop Unrolling and SIMD Mechanism ***********/
-void dgemm_unrolling(int n)
+void dgemm_unrolling_SIMD(int n)
 {
     int i, j, k;
     for(i = 0; i < n; i++)
     {
         for(j = 0; j < n; j++)
         {
-            double cij = 0;
+            __m256d c4  = _mm256_load_pd(&c[i * n + j]);
             for(k = 0; k < n; k += 4)
             {
-                double s1 = a[i * n + k] * b[k * n + j];
-                double s2 = a[i * n + (k + 1)] * b[(k + 1) * n + j];
-                double s3 = a[i * n + (k + 2)] * b[(k + 2) * n + j];
-                double s4 = a[i * n + (k + 3)] * b[(k + 3) * n + j];
-                cij += s1 + s2 + s3 + s4;
+              __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
+              __m256d b4 = _mm256_load_pd(&b[k * n + j]);
+              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
             }
-            c[i * n + j] = cij;
+            _mm256_store_pd(&c[i * n + j], c4);
         }
     }
 }
