@@ -53,6 +53,7 @@ void dgemm_unrolling(int n)
 }
 
 /*********** Cache Blocking Mechanism ***********/
+
 #define BLOCK_SIZE 4
 void do_block(int n, int si, int sj, int sk, double *a, double *b, double *c)
 {
@@ -226,9 +227,12 @@ void dgemm_blocking_combined(int n)
 void optimized_dgemm(int n)
 {
     // call any of optimization attempt
-    //dgemm_unrolling_SIMD(n);
-    //dgemm_blocking_unrolling(n);
-    dgemm_blocking_combined(n);
+    //dgemm_blocking_combined(n); //All three mechanisms
+    //dgemm_blocking_unrolling(n); //Cache Blocking + Loop Unrolling
+    //dgemm_unrolling_SIMD(n); //Loop Unrolling + SIMD
+    //dgemm_blocking_SIMD(n); //Cache Blocking + SIMD
+    //dgemm_intrin(n); //SIMD
+    dgemm_blocking(n); //Cache Blocking
 }
 
 void main(int argc, char **argv)
