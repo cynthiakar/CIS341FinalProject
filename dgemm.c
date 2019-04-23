@@ -12,6 +12,8 @@ double ALIGN a[SIZE * SIZE];
 double ALIGN b[SIZE * SIZE];
 double ALIGN c[SIZE * SIZE];
 double ALIGN c1[SIZE * SIZE];
+
+
 // naïve matrix multiplication
 void dgemm(int n)
 {
@@ -102,7 +104,7 @@ void do_block_SIMD(int n, int si, int sj, int sk, double *a, double *b, double *
 {
     int i, j, k;
     for (i = si; i < si + BLOCK_SIZE; i++)     
-        for (j = sj; j < sj + BLOCK_SIZE; j++) {
+        for (j = sj; j < sj + BLOCK_SIZE; j+=4) {
             __m256d c4  = _mm256_load_pd(&c[i * n + j]);
             for (k = sk; k < sk + BLOCK_SIZE; k++) {
                 __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
@@ -128,6 +130,7 @@ void dgemm_blocking_SIMD(int n)
 void optimized_dgemm(int n)
 {
     // call any of optimization attempt
+    dgemm_blocking_SIMD(n);
 }
 
 void main(int argc, char **argv)
@@ -174,8 +177,8 @@ void main(int argc, char **argv)
                 }
             }
         }
-        if(correct)printf("Result is correct!\n");
-        elseprintf("Result is incorrect!\n");
+        if(correct) printf("Result is correct!\n");
+        else printf("Result is incorrect!\n");
     }
     elapsed_time = (end.tv_sec - start.tv_sec) * 1000.0;
     elapsed_time += (end.tv_usec - start.tv_usec) / 1000.0;
