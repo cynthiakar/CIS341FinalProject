@@ -112,7 +112,7 @@ void do_block_SIMD(int n, int si, int sj, int sk, double *a, double *b, double *
             _mm256_store_pd(&c[i * n + j], c4);
         }
 }
-void dgemm_blocking(int n)
+void dgemm_blocking_SIMD(int n)
 {
     int i, j, k;
     for(i = 0; i < n; i += BLOCK_SIZE)     
