@@ -131,13 +131,22 @@ void dgemm_unrolling_SIMD(int n)
     int i, j, k;
     for(i = 0; i < n; i++)
     {
-        for(j = 0; j < n; j++)
+        for(j = 0; j < n; j+=4)
         {
             __m256d c4  = _mm256_load_pd(&c[i * n + j]);
             for(k = 0; k < n; k += 4)
             {
               __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
               __m256d b4 = _mm256_load_pd(&b[k * n + j]);
+              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+               a4 = _mm256_broadcast_sd(&a[i * n + (k+1)]);
+               b4 = _mm256_load_pd(&b[(k+1) * n + j]);
+              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+               a4 = _mm256_broadcast_sd(&a[i * n + (k+2)]);
+               b4 = _mm256_load_pd(&b[(k+2) * n + j]);
+              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+               a4 = _mm256_broadcast_sd(&a[i * n + (k+3)]);
+               b4 = _mm256_load_pd(&b[(k+3) * n + j]);
               c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
             }
             _mm256_store_pd(&c[i * n + j], c4);
@@ -149,7 +158,7 @@ void dgemm_unrolling_SIMD(int n)
 void optimized_dgemm(int n)
 {
     // call any of optimization attempt
-    dgemm_blocking_SIMD(n);
+    dgemm_unrolling_SIMD(n);
 }
 
 void main(int argc, char **argv)
