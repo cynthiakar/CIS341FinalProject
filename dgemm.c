@@ -162,8 +162,12 @@ void main(int argc, char **argv)
             c1[i * SIZE + j] = 0.0;
         }
     }
-    gettimeofday(&start, NULL);/* Call you optimized function optimized_dgemm */optimized_dgemm(SIZE);
-    gettimeofday(&end, NULL);/* For TA use only */if(check_correctness)
+    gettimeofday(&start, NULL);
+    /* Call you optimized function optimized_dgemm */
+    optimized_dgemm(SIZE);
+    gettimeofday(&end, NULL);
+    /* For TA use only */
+    if(check_correctness)
     {
         dgemm(SIZE);
         for(i = 0; (i < SIZE) && correct ; i++)
