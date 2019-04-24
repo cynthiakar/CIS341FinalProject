@@ -135,7 +135,7 @@ void dgemm_unrolling_SIMD(int n)
         for(j = 0; j < n; j+=4)
         {
             __m256d c4  = _mm256_load_pd(&c[i * n + j]);
-            for(k = 0; k < n; k += 4)
+            for(k = 0; k < n; k += 4)   //change here for unrolling tests
             {
               __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
               __m256d b4 = _mm256_load_pd(&b[k * n + j]);
@@ -149,6 +149,43 @@ void dgemm_unrolling_SIMD(int n)
                a4 = _mm256_broadcast_sd(&a[i * n + (k+3)]);
                b4 = _mm256_load_pd(&b[(k+3) * n + j]);
               c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              /**** COMMENT IN/OUT BELOW FOR UNROLLING TESTS ****/
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+4)]);
+              //  b4 = _mm256_load_pd(&b[(k+4) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+5)]);
+              //  b4 = _mm256_load_pd(&b[(k+5) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+6)]);
+              //  b4 = _mm256_load_pd(&b[(k+6) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+7)]);
+              //  b4 = _mm256_load_pd(&b[(k+7) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+8)]);
+              //  b4 = _mm256_load_pd(&b[(k+8) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+9)]);
+              //  b4 = _mm256_load_pd(&b[(k+9) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+10)]);
+              //  b4 = _mm256_load_pd(&b[(k+10) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+11)]);
+              //  b4 = _mm256_load_pd(&b[(k+11) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+12)]);
+              //  b4 = _mm256_load_pd(&b[(k+12) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+13)]);
+              //  b4 = _mm256_load_pd(&b[(k+13) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+14)]);
+              //  b4 = _mm256_load_pd(&b[(k+14) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+15)]);
+              //  b4 = _mm256_load_pd(&b[(k+15) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
             }
             _mm256_store_pd(&c[i * n + j], c4);
         }
@@ -162,12 +199,28 @@ void do_block_unrolling(int n, int si, int sj, int sk, double *a, double *b, dou
     for (i = si; i < si + UNROLL_BLOCK_SIZE; i++)
         for (j = sj; j < sj + UNROLL_BLOCK_SIZE; j++) {
               double cij = c[i * n + j];
-            for (k = sk; k < sk + UNROLL_BLOCK_SIZE; k+=4) {
+            for (k = sk; k < sk + UNROLL_BLOCK_SIZE; k+=4) { //change here for unrolling test
               double s1 = a[i * n + k] * b[k * n + j];
               double s2 = a[i * n + (k + 1)] * b[(k + 1) * n + j];
               double s3 = a[i * n + (k + 2)] * b[(k + 2) * n + j];
               double s4 = a[i * n + (k + 3)] * b[(k + 3) * n + j];
+              /**** COMMENT IN/OUT BELOW FOR UNROLLING TESTS ****/
+              // double s5 = a[i * n + (k + 4)] * b[(k + 4) * n + j];
+              // double s6 = a[i * n + (k + 5)] * b[(k + 5) * n + j];
+              // double s7 = a[i * n + (k + 6)] * b[(k + 6) * n + j];
+              // double s8 = a[i * n + (k + 7)] * b[(k + 7) * n + j];
+              // double s9 = a[i * n + (k + 8)] * b[(k + 8) * n + j];
+              // double s10 = a[i * n + (k + 9)] * b[(k + 9) * n + j];
+              // double s11 = a[i * n + (k + 10)] * b[(k + 10) * n + j];
+              // double s12 = a[i * n + (k + 11)] * b[(k + 11) * n + j];
+              // double s13 = a[i * n + (k + 12)] * b[(k + 12) * n + j];
+              // double s14 = a[i * n + (k + 13)] * b[(k + 13) * n + j];
+              // double s15 = a[i * n + (k + 14)] * b[(k + 14) * n + j];
+              // double s16 = a[i * n + (k + 15)] * b[(k + 15) * n + j];
+              // cij += s1 + s2;
               cij += s1 + s2 + s3 + s4;
+              // cij += s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8;
+              // cij += s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10 + s11 + s12 + s13 + s14 + s15 + s16;
             }
             c[i * n + j] = cij;
         }
@@ -193,7 +246,7 @@ void do_block_combined(int n, int si, int sj, int sk, double *a, double *b, doub
     for (i = si; i < si + THREE_BLOCK_SIZE; i++)
         for (j = sj; j < sj + THREE_BLOCK_SIZE; j+=4) {
               __m256d c4  = _mm256_load_pd(&c[i * n + j]);
-            for (k = sk; k < sk + THREE_BLOCK_SIZE; k+=4) {
+            for (k = sk; k < sk + THREE_BLOCK_SIZE; k+=4) { //change here for unrolling tests
               __m256d a4 = _mm256_broadcast_sd(&a[i * n + k]);
               __m256d b4 = _mm256_load_pd(&b[k * n + j]);
               c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
@@ -205,7 +258,45 @@ void do_block_combined(int n, int si, int sj, int sk, double *a, double *b, doub
               c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
                a4 = _mm256_broadcast_sd(&a[i * n + (k+3)]);
                b4 = _mm256_load_pd(&b[(k+3) * n + j]);
-              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4)); 
+              /**** COMMENT IN/OUT BELOW FOR UNROLLING TESTS ****/
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+4)]);
+              //  b4 = _mm256_load_pd(&b[(k+4) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+5)]);
+              //  b4 = _mm256_load_pd(&b[(k+5) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+6)]);
+              //  b4 = _mm256_load_pd(&b[(k+6) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+7)]);
+              //  b4 = _mm256_load_pd(&b[(k+7) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+8)]);
+              //  b4 = _mm256_load_pd(&b[(k+8) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+9)]);
+              //  b4 = _mm256_load_pd(&b[(k+9) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+10)]);
+              //  b4 = _mm256_load_pd(&b[(k+10) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+11)]);
+              //  b4 = _mm256_load_pd(&b[(k+11) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+12)]);
+              //  b4 = _mm256_load_pd(&b[(k+12) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+13)]);
+              //  b4 = _mm256_load_pd(&b[(k+13) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+14)]);
+              //  b4 = _mm256_load_pd(&b[(k+14) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+              //  a4 = _mm256_broadcast_sd(&a[i * n + (k+15)]);
+              //  b4 = _mm256_load_pd(&b[(k+15) * n + j]);
+              // c4 = _mm256_add_pd(c4, _mm256_mul_pd(a4, b4));
+
             }
             _mm256_store_pd(&c[i * n + j], c4);
         }
